@@ -18,14 +18,14 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Clean npm cache
-        run: npm cache clean --force
-
-      - name: Install dependencies
+      - name: Install dependencies in frontend
+        working-directory: ./frontend
         run: npm install
 
-      - name: Build the app
+      - name: Build the app in frontend
+        working-directory: ./frontend
         run: npm run build
 
-      - name: Run tests
+      - name: Run tests in frontend
+        working-directory: ./frontend
         run: npm run test:run
