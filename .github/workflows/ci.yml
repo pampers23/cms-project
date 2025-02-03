@@ -26,6 +26,15 @@ jobs:
         working-directory: ./frontend
         run: npm run build
 
-      - name: Run tests
+      - name: Start preview server
         working-directory: ./frontend
+        run: nohup npm run preview &
+
+      - name: Wait for server to be ready
+        run: sleep 10
+
+      - name: Run Cypress tests
+        working-directory: ./frontend
+        env:
+          ELECTRON_DISABLE_GPU: 1
         run: npm run test:run
