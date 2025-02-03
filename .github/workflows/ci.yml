@@ -11,29 +11,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20'
-          cache: 'npm'
-
-      # Check if package.json exists in the current directory
-      - name: Show package.json
-        run: cat package.json
-
-      # Check current directory to ensure we're in the right place
-      - name: Check Current Directory
-        run: pwd && ls -la
-
-      # Check available scripts
-      - name: Check Available Scripts
-        run: npm run
-
+          node-version: '16'
       - name: Install dependencies
         run: npm install
-
-      # Build the app
+        working-directory: ./frontend  # Adjust this path if needed
       - name: Build the app
         run: npm run build
-        working-directory: ./your-app-directory  # Add this if your package.json is in a subfolder
+        working-directory: ./frontend  # Adjust this path if needed
