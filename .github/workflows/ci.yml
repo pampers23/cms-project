@@ -18,11 +18,14 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install dependencies
-        run: npm install
+      - name: Clean npm cache and install dependencies
+        run: |
+          rm -rf node_modules
+          rm package-lock.json
+          npm install
 
       - name: Build the app
         run: npm run build
 
       - name: Run tests
-        run: npm run test:run  # Siguraduhin na tumutukoy ito sa tama na test command
+        run: npm run test:run
