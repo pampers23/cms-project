@@ -18,20 +18,22 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
+      # Check if package.json exists in the current directory
+      - name: Show package.json
+        run: cat package.json
+
+      # Check current directory to ensure we're in the right place
       - name: Check Current Directory
         run: pwd && ls -la
 
-      - name: Show package.json
-        run: cat package.json
+      # Check available scripts
+      - name: Check Available Scripts
+        run: npm run
 
       - name: Install dependencies
         run: npm install
 
-      - name: Check Available Scripts
-        run: npm run
-
-      - name: Check Installed Packages
-        run: npm ls --depth=0
-
+      # Build the app
       - name: Build the app
         run: npm run build
+        working-directory: ./your-app-directory  # Add this if your package.json is in a subfolder
