@@ -19,14 +19,10 @@ jobs:
           node-version: '18'
 
       - name: Install dependencies
-        run: |
-          cd frontend
-          npm install
+        run: npm install
 
       - name: Build the app
-        run: |
-          cd frontend
-          npm run build
+        run: npm run build
 
-      - name: Run Cypress tests
-        run: npm run test:run
+      - name: Run tests
+        run: npm run test:run  # Siguraduhin na tumutukoy ito sa tama na test command
