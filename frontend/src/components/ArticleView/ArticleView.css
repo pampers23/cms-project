@@ -1,0 +1,87 @@
+/* articleview.css */
+
+/* Container for the ArticleView component */
+.articleview-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    margin: 0 auto;
+    max-width: 1200px;
+  }
+  
+  /* Title for the ArticleView page */
+  .articleview-title {
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2.5em;
+  }
+  
+  /* Content container for the article */
+  .articleview-content {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 800px;
+  }
+  
+  /* Article title in the ArticleView */
+  .articleview-content h3 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+  }
+  
+  /* Article content in the ArticleView */
+  .articleview-content p {
+    color: #7f8c8d;
+    margin-bottom: 15px;
+  }
+  
+  /* Actions container for Edit and Delete buttons */
+  .articleview-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  
+  /* Edit and Delete buttons */
+  .articleview-button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+  }
+  
+  .articleview-button.edit {
+    background-color: #2ecc71;
+  }
+  
+  .articleview-button.delete {
+    background-color: #e74c3c;
+  }
+  
+  .articleview-button.edit:hover {
+    background-color: #27ae60;
+  }
+  
+  .articleview-button.delete:hover {
+    background-color: #c0392b;
+  }
+  
+  /* Error message styling */
+  .articleview-error {
+    color: #e74c3c;
+    text-align: center;
+    font-size: 18px;
+    margin-top: 20px;
+  }

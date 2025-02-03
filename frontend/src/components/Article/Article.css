@@ -1,0 +1,124 @@
+/* article.css */
+
+/* Container for the Articles component */
+.article-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    margin: 0 auto;
+    max-width: 1200px;
+  }
+  
+  /* Title for the Articles page */
+  .article-title {
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2.5em;
+  }
+  
+  /* Form container for creating a new article */
+  .article-form-container {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 65px;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  /* Input fields in the form */
+  .article-form-input,
+  .article-form-textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  /* Textarea in the form */
+  .article-form-textarea {
+    height: 100px;
+    resize: vertical;
+  }
+  
+  /* Button in the form */
+  .article-form-button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-right: 10px;
+    transition: background-color 0.3s;
+  }
+  
+  .article-form-button:hover {
+    background-color: #2980b9;
+  }
+  
+  /* List of articles */
+  .article-list {
+    list-style-type: none;
+    padding: 0;
+    width: 100%;
+    max-width: 800px;
+  }
+  
+  /* Individual article item */
+  .article-list-item {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+    padding: 20px;
+    transition: transform 0.2s;
+  }
+  
+  .article-list-item:hover {
+    transform: translateY(-5px);
+  }
+  
+  /* Article title in the list */
+  .article-list-item h3 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+  }
+  
+  /* Article content in the list */
+  .article-list-item p {
+    color: #7f8c8d;
+    margin-bottom: 15px;
+  }
+  
+  /* View button for articles */
+  .article-view-button {
+    background-color: #2ecc71;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+  }
+  
+  .article-view-button:hover {
+    background-color: #27ae60;
+  }
+  
+  /* Error message styling */
+  .article-error {
+    color: #e74c3c;
+    text-align: center;
+    font-size: 18px;
+    margin-top: 20px;
+  }

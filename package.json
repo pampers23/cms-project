@@ -1,0 +1,21 @@
+{
+  "name": "cms-project",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "description": "",
+  "dependencies": {
+    "@directus/sdk": "^18.0.3",
+    "@supabase/supabase-js": "^2.48.1",
+    "axios": "^1.7.9",
+    "directus": "^11.3.5",
+    "pg": "^8.13.1",
+    "react-router-dom": "^7.1.5"
+  }
+}
