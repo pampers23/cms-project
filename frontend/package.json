@@ -8,8 +8,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "cypress": "cypress open",
-    "test": "jest",
-    "test:run": "jest"
+    "test": "cypress run",
+    "test:run": "cypress run"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.7.2",
