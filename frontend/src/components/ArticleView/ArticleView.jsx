@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
-import './Articleview.css'; // Import the CSS file
+import './ArticleView.css'; // Import the CSS file
 
 const ArticleView = () => {
   const { id } = useParams();
