@@ -1,101 +1,102 @@
+// articles.spec.cy.js
+
+// --------------------
+// Home Page Test Suite
+// --------------------
 describe('The Home Page', () => {
-  it('successfully loads', () => {
+  it('successfully loads and shows the article container', () => {
+    // Visit the homepage
     cy.visit('http://localhost:5173/');
 
-    it("To see the whole container", () => {
-      cy.get("article-container");
-    });
-  })
+    // Check that the element with class "hero-section" exists and is visible.
+    cy.get('.hero-section', { timeout: 10000 }).should('be.visible');
+  });
+
+  it('navigates to the Articles page when "Get Started" is clicked', () => {
+    // Visit the homepage
+    cy.visit('http://localhost:5173/');
+
+    // Click the "Get Started" button
+    cy.get('.cta-button').click();
+
+    // Verify that the URL includes '/articles'
+    cy.url().should('include', '/articles');
+
+    // Check that the Articles page content is visible
+    cy.get('.article-container', { timeout: 10000 }).should('be.visible');
+  });
 });
 
+// -------------------------
+// Articles Page Test Suite
+// -------------------------
 describe('Articles Page', () => {
   beforeEach(() => {
-    cy.intercept('GET', 'http://localhost:8055/items/Articles', {
+    // Register the intercept for the GET request.
+    // Use a glob pattern to match any extra URL parts (like query parameters)
+    cy.intercept('GET', '**/items/Articles*', {
       statusCode: 200,
       body: {
         data: [
-          {
-            id: 1,
-            title: 'First Article',
-            Content: 'Content for first article',
-            Slug: 'first-article'
-          },
-          {
-            id: 2,
-            title: 'Second Article',
-            Content: 'Content for second article',
-            Slug: 'second-article'
-          }
+          { id: 1, title: 'First Article', Content: 'Content for first article', Slug: 'first-article' },
+          { id: 2, title: 'Second Article', Content: 'Content for second article', Slug: 'second-article' }
         ]
       }
     }).as('getArticles');
 
-    cy.visit('http://localhost:5173/');
+    // Visit the Articles page directly
+    cy.visit('http://localhost:5173/articles');
+
+    // Wait for the GET request to complete.
     cy.wait('@getArticles');
-    
-    // Ensure the form container is visible before interacting with it.
     cy.contains('Create New Article').should('be.visible');
   });
 
   it('creates a new article', () => {
-    // Intercept the POST request for article creation.
-    cy.intercept('POST', 'http://localhost:8055/items/Articles', (req) => {
+    // Intercept the POST request for creating a new article.
+    cy.intercept('POST', '**/items/Articles*', (req) => {
       req.reply({
         statusCode: 201,
         body: { data: { id: 3, ...req.body } }
       });
     }).as('postArticle');
 
-    // Intercept the GET request after article creation.
-    cy.intercept('GET', 'http://localhost:8055/items/Articles', {
+    // After creating the article, intercept the GET request again to return an updated list.
+    cy.intercept('GET', '**/items/Articles*', {
       statusCode: 200,
       body: {
         data: [
-          {
-            id: 1,
-            title: 'First Article',
-            Content: 'Content for first article',
-            Slug: 'first-article'
-          },
-          {
-            id: 2,
-            title: 'Second Article',
-            Content: 'Content for second article',
-            Slug: 'second-article'
-          },
-          {
-            id: 3,
-            title: 'New Article',
-            Content: 'New article content',
-            Slug: 'new-article'
-          }
+          { id: 1, title: 'First Article', Content: 'Content for first article', Slug: 'first-article' },
+          { id: 2, title: 'Second Article', Content: 'Content for second article', Slug: 'second-article' },
+          { id: 3, title: 'New Article', Content: 'New article content', Slug: 'new-article' }
         ]
       }
     }).as('getArticlesAfterPost');
 
-    // Fill out the create article form.
+    // Fill out the form for a new article.
     cy.get('input[placeholder="Slug"]').type('new-article');
     cy.get('textarea[placeholder="Content"]').type('New article content');
     cy.get('[data-testid="create-button"]').click();
 
-    // Wait for the POST request and the refreshed GET call.
+    // Wait for the POST and subsequent GET calls to complete.
     cy.wait('@postArticle');
     cy.wait('@getArticlesAfterPost');
 
-    // Confirm the new article appears in the list.
+    // Verify the article list now contains 3 items and that the new article appears.
     cy.get('[data-testid="article-list-item"]').should('have.length', 3);
-    cy.contains('New Article');
+    cy.contains('New Article').should('exist');
   });
 });
 
-// view update
-
+// ---------------------------
+// Article View Page Test Suite
+// ---------------------------
 describe('Article View Page', () => {
-  const articleId = 1; // Adjust as needed
+  const articleId = 1;
 
   beforeEach(() => {
-    // Intercept GET request for article details.
-    cy.intercept('GET', `http://localhost:8055/items/Articles/${articleId}`, {
+    // Intercept the GET request for the specific article.
+    cy.intercept('GET', `**/items/Articles/${articleId}*`, {
       statusCode: 200,
       body: {
         data: {
@@ -107,90 +108,16 @@ describe('Article View Page', () => {
       }
     }).as('getArticle');
 
-    // Visit the Article View page.
+    // Visit the article view page.
     cy.visit(`http://localhost:5173/article/${articleId}`);
     cy.wait('@getArticle');
   });
 
   it('displays article details', () => {
-    // Verify that the article details are displayed.
-    cy.contains('Test Article');
-    cy.contains('Slug:');
-    cy.contains('test-article');
-    cy.contains('Test content');
+    // Assert that the article details are rendered.
+    cy.contains('Test Article').should('be.visible');
+    cy.contains('Slug:').should('be.visible');
+    cy.contains('test-article').should('be.visible');
+    cy.contains('Test content').should('be.visible');
   });
-
-// it('edits the article', () => {
-//   // 1. Intercept with error handling
-//   cy.intercept('PATCH', '/items/Articles/*', (req) => {
-//     console.log('Intercepted PATCH request to:', req.url);
-//     req.reply({
-//       statusCode: 200,
-//       body: { success: true },
-//       headers: { 'Content-Type': 'application/json' }
-//     });
-//   }).as('patchArticle');
-
-//   // 2. Visit with readiness check
-//   cy.visit(`http://localhost:5173/article/${articleId}`);
-//   cy.get('h1').should('exist'); // Wait for page load
-
-//   // 3. Edit mode with visibility checks
-//   cy.contains('Edit').should('be.visible').click();
-//   cy.get('[data-cy="edit-form"]').should('be.visible');
-
-//   // 4. Form interaction with forced updates
-//   cy.get('input.article-form-input').first()
-//     .clear({ force: true })
-//     .type('Updated Article', { delay: 30, force: true });
-  
-//   cy.get('input.article-form-input').eq(1)
-//     .clear({ force: true })
-//     .type('updated-article', { delay: 30, force: true });
-
-//   cy.get('textarea.article-form-textarea')
-//     .clear({ force: true })
-//     .type('Updated content', { delay: 30, force: true });
-
-//   // 5. Add client-side delay
-//   cy.wait(1000); // Let any debounce/validation complete
-
-//   // 6. Click with network wait
-//   cy.contains('Update')
-//     .click()
-//     .then(() => {
-//       // 7. Verify network call
-//       cy.wait('@patchArticle', { timeout: 15000 })
-//         .then((interception) => {
-//           // Verify request payload
-//           expect(interception.request.body).to.include({
-//             title: 'Updated Article',
-//             slug: 'updated-article',
-//             content: 'Updated content'
-//           });
-          
-//           // Verify response
-//           expect(interception.response.statusCode).to.eq(200);
-//         });
-//     });
-
-//   // 8. Verify UI updates
-//   cy.contains('h1', 'Updated Article').should('exist');
-//   cy.contains('div.content', 'Updated content').should('exist');
-// });
-
-  // it('deletes the article and navigates back to the homepage', () => {
-  //   // Intercept the DELETE request for the article.
-  //   cy.intercept('DELETE', `http://localhost:8055/items/Articles/${articleId}`, {
-  //     statusCode: 200,
-  //     body: { data: {} }
-  //   }).as('deleteArticle');
-
-  //   // Click the Delete button.
-  //   cy.contains('Delete').click();
-  //   cy.wait('@deleteArticle');
-
-  //   // Assert that the URL is now the homepage.
-  //   cy.url().should('eq', 'http://localhost:5173/');
-  // });
 });

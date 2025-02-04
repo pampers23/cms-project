@@ -15,3 +15,9 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands'
+
+Cypress.on('window:before:load', (win) => {
+    cy.spy(win.console, 'log');
+    cy.spy(win.console, 'error');
+    cy.spy(win.console, 'warn');
+  });

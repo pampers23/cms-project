@@ -11,13 +11,20 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
+
       - name: Install dependencies
         run: npm install
         working-directory: ./frontend  # Adjust this path if needed
+
       - name: Build the app
         run: npm run build
+        working-directory: ./frontend  # Adjust this path if needed
+
+      - name: Run Cypress tests
+        run: npx cypress run
         working-directory: ./frontend  # Adjust this path if needed
