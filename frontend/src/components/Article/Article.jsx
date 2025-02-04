@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import './Article.css'; // Import the CSS file
+import './Article.css';
 
 const Articles = () => {
   const [articles, setArticles] = useState([]);
@@ -25,17 +25,23 @@ const Articles = () => {
     fetchArticles();
   }, []);
 
+  const validateForm = () => {
+    const titleValid = newArticle.title.trim() !== '';
+    const contentValid = newArticle.Content.trim() !== '';
+    const slugValid = newArticle.Slug.trim() !== '';
+    return titleValid && contentValid && slugValid;
+  };
+
   const handleCreateArticle = async () => {
+    if (!validateForm()) {
+      alert('Please fill in all required fields: Title, Content, and Slug.');
+      return;
+    }
+
     try {
       await axios.post('http://localhost:8055/items/Articles', newArticle);
-      
-      // Alert the user that the article has been created
       alert('Article has been created successfully!');
-
-      // Reset the form
       setNewArticle({ title: '', Content: '', Slug: '' });
-      
-      // Refresh the article list
       const response = await axios.get('http://localhost:8055/items/Articles');
       setArticles(response.data.data);
     } catch (error) {
@@ -60,7 +66,7 @@ const Articles = () => {
           type="text"
           placeholder="Title"
           value={newArticle.title}
-          onChange={(e) => setNewArticle({ ...newArticle, title: e.target.value })} 
+          onChange={(e) => setNewArticle({ ...newArticle, title: e.target.value })}
           className="article-form-input"
         />
         <input
@@ -81,7 +87,7 @@ const Articles = () => {
         </button>
       </div>
 
-      <h>Article List</h>
+      <h2>Article List</h2>
       <ul className="article-list">
         {articles.map((article) => (
           <li key={article.id} className="article-list-item" data-testid="article-list-item">

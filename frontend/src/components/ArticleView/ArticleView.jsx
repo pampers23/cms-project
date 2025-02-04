@@ -11,6 +11,7 @@ const ArticleView = () => {
   const [error, setError] = useState(null);
   const [editing, setEditing] = useState(false);
   const [editedArticle, setEditedArticle] = useState({ title: '', Content: '', Slug: '' });
+  const [successMessage, setSuccessMessage] = useState(''); // State for success message
 
   useEffect(() => {
     const fetchArticle = async () => {
@@ -43,6 +44,8 @@ const ArticleView = () => {
       setEditing(false);
       const response = await axios.get(`http://localhost:8055/items/Articles/${id}`);
       setArticle(response.data.data);
+      setSuccessMessage('Article updated successfully!'); // Show success message
+      setTimeout(() => setSuccessMessage(''), 3000); // Hide success message after 3 seconds
     } catch (error) {
       setError('Error updating article: ' + error.message);
     }
@@ -53,6 +56,13 @@ const ArticleView = () => {
 
   return (
     <div className="articleview-container">
+      {/* Show the success message in an alert box */}
+      {successMessage && (
+        <div className="articleview-alert">
+          {successMessage}
+        </div>
+      )}
+
       <h1 className="articleview-title">{article.title}</h1>
       <div className="articleview-content">
         <p><strong>Slug:</strong> {article.Slug}</p>
