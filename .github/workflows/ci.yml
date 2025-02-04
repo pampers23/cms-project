@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -25,6 +25,12 @@ jobs:
         run: npm run build
         working-directory: ./frontend  # Adjust this path if needed
 
-      - name: Run Cypress tests
-        run: npx cypress run
+      # Optionally install start-server-and-test if it's not already in your dependencies
+      - name: Install start-server-and-test
+        run: npm install start-server-and-test --save-dev
+        working-directory: ./frontend
+
+      # Start the server and run Cypress tests once the server is available
+      - name: Start app server and run Cypress tests
+        run: npx start-server-and-test "npm start" http://localhost:5173 "npx cypress run"
         working-directory: ./frontend  # Adjust this path if needed
