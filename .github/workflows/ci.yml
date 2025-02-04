@@ -32,5 +32,6 @@ jobs:
 
       # Start the server and run Cypress tests once the server is available
       - name: Start app server and run Cypress tests
-        run: npx start-server-and-test "npm start" http://localhost:5173 "npx cypress run"
+        run: npx start-server-and-test "npm run dev" http://localhost:5173 "npx cypress run"
         working-directory: ./frontend
+    

@@ -32,45 +32,36 @@ describe('The Home Page', () => {
 // -------------------------
 describe('Articles Page', () => {
   beforeEach(() => {
-    // Register the intercept for the GET request.
-    // Use a glob pattern to match any extra URL parts (like query parameters)
-    cy.intercept('GET', '**/items/Articles*', {
-      statusCode: 200,
-      body: {
-        data: [
-          { id: 1, title: 'First Article', Content: 'Content for first article', Slug: 'first-article' },
-          { id: 2, title: 'Second Article', Content: 'Content for second article', Slug: 'second-article' }
-        ]
-      }
+    // Intercept the GET request BEFORE visiting the page
+    cy.intercept('GET', '**/items/Articles*', (req) => {
+      req.continue((res) => {
+        console.log('Intercepted GET Response:', res.body); // Debugging
+      });
     }).as('getArticles');
 
-    // Visit the Articles page directly
+    // Visit the Articles page
     cy.visit('http://localhost:5173/articles');
 
-    // Wait for the GET request to complete.
+    // Wait for the GET request to complete
     cy.wait('@getArticles');
     cy.contains('Create New Article').should('be.visible');
   });
 
   it('creates a new article', () => {
-    // Intercept the POST request for creating a new article.
+    // Register the POST intercept first
     cy.intercept('POST', '**/items/Articles*', (req) => {
+      console.log('Intercepted POST Request:', req.body); // Debugging
       req.reply({
         statusCode: 201,
-        body: { data: { id: 3, ...req.body } }
+        body: { data: { id: 3, ...req.body } },
       });
     }).as('postArticle');
 
-    // After creating the article, intercept the GET request again to return an updated list.
-    cy.intercept('GET', '**/items/Articles*', {
-      statusCode: 200,
-      body: {
-        data: [
-          { id: 1, title: 'First Article', Content: 'Content for first article', Slug: 'first-article' },
-          { id: 2, title: 'Second Article', Content: 'Content for second article', Slug: 'second-article' },
-          { id: 3, title: 'New Article', Content: 'New article content', Slug: 'new-article' }
-        ]
-      }
+    // Intercept the updated GET request AFTER posting
+    cy.intercept('GET', '**/items/Articles*', (req) => {
+      req.continue((res) => {
+        console.log('Intercepted GET After POST:', res.body); // Debugging
+      });
     }).as('getArticlesAfterPost');
 
     // Fill out the form for a new article.
@@ -78,11 +69,13 @@ describe('Articles Page', () => {
     cy.get('textarea[placeholder="Content"]').type('New article content');
     cy.get('[data-testid="create-button"]').click();
 
-    // Wait for the POST and subsequent GET calls to complete.
-    cy.wait('@postArticle');
+    // Wait for the POST request to complete
+    cy.wait('@postArticle', { timeout: 10000 }); // Extended timeout
+
+    // Wait for the GET request to refresh the list
     cy.wait('@getArticlesAfterPost');
 
-    // Verify the article list now contains 3 items and that the new article appears.
+    // Verify the article list now contains 3 items
     cy.get('[data-testid="article-list-item"]').should('have.length', 3);
     cy.contains('New Article').should('exist');
   });
@@ -95,20 +88,14 @@ describe('Article View Page', () => {
   const articleId = 1;
 
   beforeEach(() => {
-    // Intercept the GET request for the specific article.
-    cy.intercept('GET', `**/items/Articles/${articleId}*`, {
-      statusCode: 200,
-      body: {
-        data: {
-          id: articleId,
-          title: 'Test Article',
-          Content: '<p>Test content</p>',
-          Slug: 'test-article'
-        }
-      }
+    // Intercept the GET request BEFORE visiting the page
+    cy.intercept('GET', `**/items/Articles/${articleId}*`, (req) => {
+      req.continue((res) => {
+        console.log('Intercepted GET Article Response:', res.body); // Debugging
+      });
     }).as('getArticle');
 
-    // Visit the article view page.
+    // Visit the article view page
     cy.visit(`http://localhost:5173/article/${articleId}`);
     cy.wait('@getArticle');
   });
