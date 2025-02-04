@@ -1,37 +1,12 @@
-name: CI/CD Workflow
-
-on:
-  push:
-    branches:
-      - master
-
+name: End-to-end tests
+on: push
 jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
+  cypress-run:
+    runs-on: ubuntu-24.04
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-
-      - name: Install dependencies
-        run: npm install
-        working-directory: ./frontend  # Adjust this path if needed
-
-      - name: Build the app
-        run: npm run build
-        working-directory: ./frontend  # Adjust this path if needed
-
-      # Optionally install start-server-and-test if it's not already in your dependencies
-      - name: Install start-server-and-test
-        run: npm install start-server-and-test --save-dev
-        working-directory: ./frontend
-
-      # Start the server and run Cypress tests once the server is available
-      - name: Start app server and run Cypress tests
-        run: npx start-server-and-test "npm run dev" http://localhost:5173 "npx cypress run"
-        working-directory: ./frontend
-    
+      - name: Checkout
+        uses: actions/checkout@v4
+      # Install npm dependencies, cache them correctly
+      # and run all Cypress tests
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
